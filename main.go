@@ -1,29 +1,12 @@
 package main
 
 import (
-	"html/template"
-	"loja-web-app/db"
-	"loja-web-app/produtos"
+	"loja-web-app/routes"
 	"net/http"
 )
 
-var templates = template.Must(template.ParseGlob("templates/*.html"))
-
 func main() {
 	// Start the application
-	http.HandleFunc("/", IndexHandler)
+	routes.LoadRoutes()
 	http.ListenAndServe(":8000", nil)
-}
-
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	repository := produtos.NewProdutoRepository(
-		db.DbConnection(),
-	)
-	produtos, erro := repository.BuscaTodosProdutos()
-
-	if erro != nil {
-		panic(erro.Error())
-	}
-
-	templates.ExecuteTemplate(w, "Index", produtos)
 }
