@@ -45,3 +45,14 @@ func (produtoRepository *ProdutoRepository) BuscaTodosProdutos() ([]Produto, err
 
 	return produtos, err
 }
+
+func (produtoRepository *ProdutoRepository) CriaProduto(nome, descricao string, preco float64, quantidade int) {
+	insertProduto, err := produtoRepository.db.Prepare("INSERT INTO produtos(nome, descricao, preco, quantidade) VALUES($1, $2, $3, $4)")
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	insertProduto.Exec(nome, descricao, preco, quantidade)
+	defer produtoRepository.db.Close()
+}
